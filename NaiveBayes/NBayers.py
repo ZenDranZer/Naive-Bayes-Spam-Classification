@@ -8,7 +8,7 @@ import numpy as np
 '''
 
 def filter_email(fileName,vocabulary):
-    file = open(fileName, "r")
+    file = open(fileName, "r",encoding="utf8", errors='ignore')
     for line in file.readlines():
         line = line.lower()
         line = re.sub('[^A-Za-z0-9 ]+', ' ', line)

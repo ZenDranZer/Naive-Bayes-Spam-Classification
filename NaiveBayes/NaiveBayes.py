@@ -19,8 +19,8 @@ def parse_file():
     #print(files)
     for files_all in files:
         file_path = "../Training Set/" + files_all
-        #print(file_path)
-        file = open(file_path,"r")
+        print(file_path)
+        file = open(file_path,"r",encoding="utf8", errors='ignore')
         for line in file.readlines():
             #print(line)
             line = line.lower()
