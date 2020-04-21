@@ -1,4 +1,4 @@
-import glob
+import os
 import re
 import numpy as np
 
@@ -14,24 +14,29 @@ vocab = []
 vocabulary = {}
 
 def parse_file():
-    path = '../Training Set/*.txt'      ## check with prof
-    files = glob.glob(path)         ## check with prof
-    file = open("../Training Set/train-ham-00006.txt","r")
-    for line in file.readlines():
-        #print(line)
-        line = line.lower()
-        line = re.sub('[^A-Za-z0-9 ]+', ' ', line)
-        line = re.split(" ", line)
-        for i in line:
-            if (i != " " and i != ''):
-                vocab.append(i)
+    files = os.walk("../Training Set/",topdown=True)
+    files = files.__next__()[2]
+    #print(files)
+    for files_all in files:
+        file_path = "../Training Set/" + files_all
+        #print(file_path)
+        file = open(file_path,"r")
+        for line in file.readlines():
+            #print(line)
+            line = line.lower()
+            line = re.sub('[^A-Za-z0-9 ]+', ' ', line)
+            line = re.split(" ", line)
+            for i in line:
+                if (i != " " and i != ''):
+                    vocab.append(i)
 
-    for i in vocab:
-        word_data = []
-        count = vocab.count(i)
-        word_data.append(count)
-        vocabulary[i] = word_data
-        vocab.remove(i)
+        for i in vocab:
+            word_data = []
+            count = vocab.count(i)
+            word_data.append(count)
+            vocabulary[i] = word_data
+            vocab.remove(i)
+        #print("done : " + file_path)
 
     print(vocabulary)
 
