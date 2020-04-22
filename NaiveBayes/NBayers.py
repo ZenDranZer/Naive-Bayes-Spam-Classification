@@ -176,9 +176,5 @@ def classifier():
 
 
 
-
-
-
-
 parse_file()
 classifier()
