@@ -7,7 +7,7 @@ import math
     spamVocab has all the vocabulary of spam with structure {'term' : count_in_spam}
 '''
 PHam = 0
-PSpam= 0
+PSpam = 0
 model = {}
 
 def filter_email(fileName,vocabulary,globVocab):
@@ -36,13 +36,13 @@ def parse_file():
     # print(files)
     for fileName in files:
         file_path = "../Training Set/" + fileName
-        fname = re.split("-",fileName)
+        fname = re.split("-", fileName)
         if fname[1] == 'ham':
             ham += 1
-            filter_email(file_path, hamVocab,vocabulary)
+            filter_email(file_path, hamVocab, vocabulary)
         else:
             spam += 1
-            filter_email(file_path, spamVocab,vocabulary)
+            filter_email(file_path, spamVocab, vocabulary)
     vocabulary = list(dict.fromkeys(vocabulary))
     vocabulary.sort()
     calculate_probabilities(ham, spam, vocabulary, hamVocab, spamVocab)
@@ -173,11 +173,6 @@ def classifier():
         f.write(line)
         cntr = cntr + 1
     f.close()
-
-
-
-
-
 
 
 parse_file()
