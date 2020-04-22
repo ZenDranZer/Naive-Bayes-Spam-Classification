@@ -14,7 +14,7 @@ def filter_email(fileName,vocabulary,globVocab):
     file = open(fileName, "r", encoding="utf8", errors='ignore')
     for line in file.readlines():
         line = line.lower()
-        line = re.sub('[^A-Za-z0-9 ]+', ' ', line)
+        line = re.sub('[^A-Za-z ]+', ' ', line)
         line = re.split(" ", line)
         for i in line:
             if i != '':
@@ -124,7 +124,7 @@ def getWordListofEmail(fileName):
     vocabulary_test = {}
     for line in file.readlines():
         line = line.lower()
-        line = re.sub('[^A-Za-z0-9 ]+', ' ', line)
+        line = re.sub('[^A-Za-z ]+', ' ', line)
         line = re.split(" ", line)
         for i in line:
             if i != '':
