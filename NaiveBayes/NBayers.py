@@ -123,24 +123,42 @@ def spamProbability(vocabulary_test,PSpam):
 def confusion_matrix(truePositive,trueNegative,falsePositive,falseNegative):
     print("\n")
     print( "CONFUSION MATRIX")
-    print("    |    HAM    |    SPAM    |")
-    print("----|------------------------|")
-    print("    |           |            |")
-    print("HAM |   " + str(truePositive) + "     |         " + str(falsePositive) + "  |")
-    print("    |           |            |")
-    print("----|------------------------|")
-    print("    |           |            |")
-    print("SPAM|   " + str(falseNegative) + "      |       " + str(trueNegative) + "  |")
-    print("    |           |            |")
-    print("    |-----------|------------|")
+    print("|-----------------------------|")
+    print("|    |    HAM    |    SPAM    |")
+    print("|----|------------------------|")
+    print("|    |           |            |")
+    print("|HAM |   " + str(truePositive) + "     |         " + str(falsePositive) + "  |")
+    print("|    |           |            |")
+    print("|----|------------------------|")
+    print("|    |           |            |")
+    print("|SPAM|   " + str(falseNegative) + "      |       " + str(trueNegative) + "  |")
+    print("|    |           |            |")
+    print("|-----------------------------|")
+
+def display_evaluation_metrics(truePositive,trueNegative,falsePositive,falseNegative):
+    accuracy = ((trueNegative + truePositive) / (trueNegative + truePositive + falseNegative + falsePositive)) * 100
+    precision = (truePositive / (truePositive + falsePositive)) * 100
+    recall = (truePositive / (truePositive + falseNegative)) * 100
+    f1_score = ((2 * precision/100 * recall/100) / ((precision/100) + (recall/100))) * 100
+    #total = trueNegative + truePositive + falseNegative + falsePositive
+    print("\n")
+    print("|--------------------|")
+    print("| Accuracy  : " + str(accuracy) + "% |")
+    print("|--------------------|")
+    print("| Precision : " + str(precision) + "%  |")
+    print("|--------------------|")
+    print("| Recall    : " + str(round(recall,2)) + "% |")
+    print("|--------------------|")
+    print("| F1-Score  : " + str(round(f1_score, 2)) + "% |")
+    print("|--------------------|")
 
 
 def classifier(PHam,PSpam):
     files = os.walk("../Test Set/", topdown=True)
     files = files.__next__()[2]
     cntr = 1
-    right = 0
-    wrong = 0
+    correctly_classified = 0
+    incorrectly_classified = 0
     truePositive = 0
     trueNegative = 0
     falsePositive = 0
@@ -171,14 +189,14 @@ def classifier(PHam,PSpam):
 
         if classifiedClass.__eq__(correctClass):
             label = "right"
-            right = right + 1
+            correctly_classified = correctly_classified + 1
             if(correctClass == "ham") :
                 truePositive = truePositive + 1
             else:
                 trueNegative = trueNegative + 1
         else:
             label = "wrong"
-            wrong = wrong +1
+            incorrectly_classified = incorrectly_classified +1
             if(correctClass == "ham"):
                 falsePositive = falsePositive + 1
             else:
@@ -189,19 +207,9 @@ def classifier(PHam,PSpam):
         f.write(line)
         cntr = cntr + 1
 
-    accuracy = (right / (right + wrong)) * 100
-    precision = (truePositive / (truePositive + falsePositive)) * 100
-    recall = (truePositive / (truePositive + falseNegative)) * 100
-    f1_score = ((2 * precision/100 * recall/100) / ((precision/100) + (recall/100))) * 100
-    #total = trueNegative + truePositive + falseNegative + falsePositive
-    print("Accuracy : " + str(accuracy) + "%")
-    print("Precision : " + str(precision) + "%")
-    print("Recall : " + str(recall) + "%")
-    print("F1 Score : " + str(f1_score) + "%")
-
-    confusion_matrix(truePositive,trueNegative,falsePositive,falseNegative)
+    confusion_matrix(truePositive, trueNegative, falsePositive, falseNegative)
+    display_evaluation_metrics(truePositive, trueNegative, falsePositive, falseNegative)
 
     f.close()
-
 
 parse_file()
