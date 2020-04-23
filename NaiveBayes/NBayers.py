@@ -24,6 +24,7 @@ def filter_email(fileName,vocabulary,globVocab):
                 else:
                     vocabulary[i] = 1
                 globVocab.append(i)
+        return vocabulary
 
 def parse_file():
     vocabulary = []
@@ -101,64 +102,50 @@ def generateModel(model):
 
 def hamProbability(vocabulary_test):
     if(PHam != 0) :
-        probability = math.log10(PHam)
+        ##probability = math.log10(PHam)
+        probability = PHam
     else:
         probability = 0
     for word in vocabulary_test.keys():
         if(model.__contains__(word)):
-            probability = probability + vocabulary_test[word]*math.log10(model[word][2])
+            #probability = probability + vocabulary_test[word]*math.log10(model[word][2])
+            probability = probability + vocabulary_test[word] * model[word][2]
     return probability
 
 def spamProbability(vocabulary_test):
     if(PSpam != 0) :
-        probability = math.log10(PSpam)
+        #probability = math.log10(PSpam)
+        probability = PSpam
     else:
         probability = 0
     for word in vocabulary_test.keys():
         if(model.__contains__(word)):
-            probability = probability + vocabulary_test[word]*math.log10(model[word][4])
+            #probability = probability + vocabulary_test[word]*math.log10(model[word][4])
+            probability = probability + vocabulary_test[word] * model[word][4]
     return probability
-
-def getWordListofEmail(fileName):
-    file = open("../Test Set/" + fileName, "r", encoding="utf8", errors='ignore')
-    vocabulary_test = {}
-    for line in file.readlines():
-        line = line.lower()
-        line = re.sub('[^A-Za-z ]+', ' ', line)
-        line = re.split(" ", line)
-        for i in line:
-            if i != '':
-                c = vocabulary_test.get(i)
-                if c:
-                    vocabulary_test[i] = c + 1
-                else:
-                    vocabulary_test[i] = 1
-    return vocabulary_test
 
 def classifier():
     files = os.walk("../Test Set/", topdown=True)
     files = files.__next__()[2]
     cntr = 1
-    correctClass = ""
-    classifiedClass = ""
-    probHam= 0
-    probSpam= 0
-    label = ""
     f = open("result.txt", "w+")
+    vocabulary_test = {}
 
     for fileName in files:
-        fname = re.split("-",fileName)
+        file = fileName
+        fileName = "../Test Set/" + fileName
+        fname = re.split("-", fileName)
         if fname[1] == 'ham':
             correctClass = "ham"
         else:
             correctClass = "spam"
 
-        vocabulary_test = getWordListofEmail(fileName)
+        vocabulary_test = filter_email(fileName, {},[])
 
         probHam = hamProbability(vocabulary_test)
         probSpam = spamProbability(vocabulary_test)
 
-        if(probHam > probSpam) :
+        if(probHam > probSpam):
             classifiedClass = "ham"
         else:
             classifiedClass = "spam"
@@ -168,8 +155,8 @@ def classifier():
         else:
             label = "wrong"
 
-        line = str(cntr) + "  " + fileName + "  " + str(classifiedClass) + "  " + str(probHam) + "  " + \
-               str(probSpam) + "  " + str(correctClass) + "  " +  str(label) + "\n"
+        line = str(cntr) + "  " + file + "  " + str(classifiedClass) + "  " + str(probHam) + "  " + \
+               str(probSpam) + "  " + str(correctClass) + "  " + str(label) + "\n"
         f.write(line)
         cntr = cntr + 1
     f.close()
