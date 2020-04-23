@@ -120,42 +120,29 @@ def spamProbability(vocabulary_test,PSpam):
             probability = probability + vocabulary_test[word]*math.log10(model[word][4])
     return probability
 
-def getWordListofEmail(fileName):
-    file = open("../Test Set/" + fileName, "r", encoding="utf8", errors='ignore')
-    vocabulary_test = {}
-    for line in file.readlines():
-        line = line.lower()
-        line = re.sub('[^A-Za-z ]+', ' ', line)
-        line = re.split(" ", line)
-        for i in line:
-            if i != '':
-                c = vocabulary_test.get(i)
-                if c:
-                    vocabulary_test[i] = c + 1
-                else:
-                    vocabulary_test[i] = 1
-    return vocabulary_test
-
-def classifier(PHam,PSpam):
+def classifier():
     files = os.walk("../Test Set/", topdown=True)
     files = files.__next__()[2]
     cntr = 1
 
     f = open("result.txt", "w+")
+    vocabulary_test = {}
 
     for fileName in files:
-        fname = re.split("-",fileName)
+        file = fileName
+        fileName = "../Test Set/" + fileName
+        fname = re.split("-", fileName)
         if fname[1] == 'ham':
             correctClass = "ham"
         else:
             correctClass = "spam"
 
-        vocabulary_test = getWordListofEmail(fileName)
+        vocabulary_test = filter_email(fileName, {},[])
 
         probHam = hamProbability(vocabulary_test,PHam)
         probSpam = spamProbability(vocabulary_test,PSpam)
 
-        if(probHam > probSpam) :
+        if(probHam > probSpam):
             classifiedClass = "ham"
         else:
             classifiedClass = "spam"
@@ -165,8 +152,8 @@ def classifier(PHam,PSpam):
         else:
             label = "wrong"
 
-        line = str(cntr) + "  " + fileName + "  " + str(classifiedClass) + "  " + str(probHam) + "  " + \
-               str(probSpam) + "  " + str(correctClass) + "  " +  str(label) + "\n"
+        line = str(cntr) + "  " + file + "  " + str(classifiedClass) + "  " + str(probHam) + "  " + \
+               str(probSpam) + "  " + str(correctClass) + "  " + str(label) + "\n"
         f.write(line)
         cntr = cntr + 1
     f.close()
