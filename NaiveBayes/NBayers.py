@@ -120,10 +120,29 @@ def spamProbability(vocabulary_test,PSpam):
             probability = probability + (vocabulary_test[word]*math.log10(model[word][4]))
     return probability
 
+def confusion_matrix(truePositive,trueNegative,falsePositive,falseNegative):
+    print("\n")
+    print( "CONFUSION MATRIX")
+    print("|------------------------|")
+    print("|           |            |")
+    print("|   " + str(truePositive) + "     |         " + str(falsePositive) + "  |")
+    print("|           |            |")
+    print("|------------------------|")
+    print("|   " + str(falseNegative) + "      |       " + str(trueNegative) + "  |")
+    print("|           |            |")
+    print("|-----------|------------|")
+
+
 def classifier(PHam,PSpam):
     files = os.walk("../Test Set/", topdown=True)
     files = files.__next__()[2]
     cntr = 1
+    right = 0
+    wrong = 0
+    truePositive = 0
+    trueNegative = 0
+    falsePositive = 0
+    falseNegative = 0
 
     f = open("result.txt", "w+")
 
@@ -150,13 +169,36 @@ def classifier(PHam,PSpam):
 
         if classifiedClass.__eq__(correctClass):
             label = "right"
+            right = right + 1
+            if(correctClass == "ham") :
+                truePositive = truePositive + 1
+            else:
+                trueNegative = trueNegative + 1
         else:
             label = "wrong"
+            wrong = wrong +1
+            if(correctClass == "ham"):
+                falsePositive = falsePositive + 1
+            else:
+                falseNegative = falseNegative + 1
 
         line = str(cntr) + "  " + file + "  " + str(classifiedClass) + "  " + str(probHam) + "  " + \
                str(probSpam) + "  " + str(correctClass) + "  " + str(label) + "\n"
         f.write(line)
         cntr = cntr + 1
+
+    accuracy = (right / (right + wrong)) * 100
+    precision = (truePositive / (truePositive + falsePositive)) * 100
+    recall = (truePositive / (truePositive + falseNegative)) * 100
+    f1_score = ((2 * precision/100 * recall/100) / ((precision/100) + (recall/100))) * 100
+    #total = trueNegative + truePositive + falseNegative + falsePositive
+    print("Accuracy : " + str(accuracy) + "%")
+    print("Precision : " + str(precision) + "%")
+    print("Recall : " + str(recall) + "%")
+    print("F1 Score : " + str(f1_score) + "%")
+
+    confusion_matrix(truePositive,trueNegative,falsePositive,falseNegative)
+
     f.close()
 
 
