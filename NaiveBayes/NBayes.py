@@ -25,6 +25,7 @@ def filter_email(fileName,vocabulary,globVocab):
                     vocabulary[i] = 1
                 globVocab.append(i)
 
+
 def parse_file():
     vocabulary = []
     hamVocab = {}
