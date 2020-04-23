@@ -31,11 +31,11 @@ def parse_file():
     spamVocab = {}
     ham = 0
     spam = 0
-    files = os.walk("../Training Set 1/", topdown=True)
+    files = os.walk("../Training Set/", topdown=True)
     files = files.__next__()[2]
     # print(files)
     for fileName in files:
-        file_path = "../Training Set 1/" + fileName
+        file_path = "../Training Set/" + fileName
         fname = re.split("-", fileName)
         if fname[1] == 'ham':
             ham += 1
@@ -107,7 +107,7 @@ def hamProbability(vocabulary_test,PHam):
         probability = 0
     for word in vocabulary_test.keys():
         if(model.__contains__(word)):
-            probability = probability + vocabulary_test[word] * math.log10(model[word][2])
+            probability = probability + (vocabulary_test[word]*math.log10(model[word][2]))
     return probability
 
 def spamProbability(vocabulary_test,PSpam):
@@ -117,21 +117,21 @@ def spamProbability(vocabulary_test,PSpam):
         probability = 0
     for word in vocabulary_test.keys():
         if(model.__contains__(word)):
-            probability = probability + vocabulary_test[word] * math.log10(model[word][4])
+            probability = probability + (vocabulary_test[word]*math.log10(model[word][4]))
     return probability
 
 def classifier(PHam,PSpam):
-    files = os.walk("../Test Set 1/", topdown=True)
+    files = os.walk("../Test Set/", topdown=True)
     files = files.__next__()[2]
     cntr = 1
 
     f = open("result.txt", "w+")
 
-    vocabulary_test = {}
 
     for fileName in files:
         file = fileName
-        fileName = "../Test Set 1/" + fileName
+        vocabulary_test = {}
+        fileName = "../Test Set/" + fileName
         fname = re.split("-", fileName)
         if fname[1] == 'ham':
             correctClass = "ham"
@@ -143,12 +143,12 @@ def classifier(PHam,PSpam):
         probHam = hamProbability(vocabulary_test,PHam)
         probSpam = spamProbability(vocabulary_test,PSpam)
 
-        if(probHam > probSpam):
+        if probHam > probSpam:
             classifiedClass = "ham"
         else:
             classifiedClass = "spam"
 
-        if(classifiedClass.__eq__(correctClass)):
+        if classifiedClass.__eq__(correctClass):
             label = "right"
         else:
             label = "wrong"
