@@ -123,14 +123,16 @@ def spamProbability(vocabulary_test,PSpam):
 def confusion_matrix(truePositive,trueNegative,falsePositive,falseNegative):
     print("\n")
     print( "CONFUSION MATRIX")
-    print("|------------------------|")
-    print("|           |            |")
-    print("|   " + str(truePositive) + "     |         " + str(falsePositive) + "  |")
-    print("|           |            |")
-    print("|------------------------|")
-    print("|   " + str(falseNegative) + "      |       " + str(trueNegative) + "  |")
-    print("|           |            |")
-    print("|-----------|------------|")
+    print("    |    HAM    |    SPAM    |")
+    print("----|------------------------|")
+    print("    |           |            |")
+    print("HAM |   " + str(truePositive) + "     |         " + str(falsePositive) + "  |")
+    print("    |           |            |")
+    print("----|------------------------|")
+    print("    |           |            |")
+    print("SPAM|   " + str(falseNegative) + "      |       " + str(trueNegative) + "  |")
+    print("    |           |            |")
+    print("    |-----------|------------|")
 
 
 def classifier(PHam,PSpam):
