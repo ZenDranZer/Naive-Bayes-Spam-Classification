@@ -58,8 +58,8 @@ def calculate_probabilities(ham, spam, vocabulary, hamVocab, spamVocab):
     PSpam = spam / totalEmail
     PHamWord = {}
     PSpamWord = {}
-    hamWords = len(hamVocab)
-    spamWords = len(spamVocab)
+    hamWords = sum(hamVocab.values())
+    spamWords = sum(spamVocab.values())
     vocabularySize = len(vocabulary)
 
     for k , v in hamVocab.items():
@@ -87,6 +87,7 @@ def calculate_probabilities(ham, spam, vocabulary, hamVocab, spamVocab):
         model[term] = row
 
     generateModel(model)
+    classifier(PHam,PSpam)
 
 
 def generateModel(model):
@@ -99,7 +100,7 @@ def generateModel(model):
     f.close()
 
 
-def hamProbability(vocabulary_test):
+def hamProbability(vocabulary_test,PHam):
     if(PHam != 0) :
         probability = math.log10(PHam)
     else:
@@ -109,7 +110,7 @@ def hamProbability(vocabulary_test):
             probability = probability + vocabulary_test[word]*math.log10(model[word][2])
     return probability
 
-def spamProbability(vocabulary_test):
+def spamProbability(vocabulary_test,PSpam):
     if(PSpam != 0) :
         probability = math.log10(PSpam)
     else:
@@ -135,15 +136,11 @@ def getWordListofEmail(fileName):
                     vocabulary_test[i] = 1
     return vocabulary_test
 
-def classifier():
+def classifier(PHam,PSpam):
     files = os.walk("../Test Set/", topdown=True)
     files = files.__next__()[2]
     cntr = 1
-    correctClass = ""
-    classifiedClass = ""
-    probHam= 0
-    probSpam= 0
-    label = ""
+
     f = open("result.txt", "w+")
 
     for fileName in files:
@@ -155,8 +152,8 @@ def classifier():
 
         vocabulary_test = getWordListofEmail(fileName)
 
-        probHam = hamProbability(vocabulary_test)
-        probSpam = spamProbability(vocabulary_test)
+        probHam = hamProbability(vocabulary_test,PHam)
+        probSpam = spamProbability(vocabulary_test,PSpam)
 
         if(probHam > probSpam) :
             classifiedClass = "ham"
@@ -175,6 +172,4 @@ def classifier():
     f.close()
 
 
-
 parse_file()
-classifier()
